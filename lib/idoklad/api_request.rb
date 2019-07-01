@@ -1,23 +1,23 @@
-require 'json'
+module Idoklad
+  module ApiRequest
 
-module Idoklad::ApiRequest
+    def self.get(path)
+      @token ||= Idoklad::Auth.get_token
 
-  def self.get(path)
-    @token ||= Idoklad::Auth.get_token
+      uri = URI.parse("#{Idoklad::API_URL}#{path}")
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      http.get(uri.request_uri, { 'Authorization' => "Bearer #{@token}" })
+    end
 
-    uri = URI.parse("#{Idoklad::API_URL}#{path}")
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    http.get(uri.request_uri, {'Authorization' => "Bearer #{@token}"})
+    def self.post(path, object)
+      @token ||= Idoklad::Auth.get_token
+
+      uri = URI.parse("#{Idoklad::API_URL}#{path}")
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      http.post(uri.request_uri, JSON.generate(object), { 'Authorization' => "Bearer #{@token}", 'Content-type' => 'application/json' })
+    end
+
   end
-
-  def self.post(path, object)
-    @token ||= Idoklad::Auth.get_token
-
-    uri = URI.parse("#{Idoklad::API_URL}#{path}")
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true
-    http.post(uri.request_uri, JSON.generate(object), {'Authorization' => "Bearer #{@token}", 'Content-type' => 'application/json'})
-  end
-
 end
