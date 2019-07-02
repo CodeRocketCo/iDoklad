@@ -18,6 +18,8 @@ module Idoklad
   end
 
   module Entities
+    autoload :ApiLimit, "idoklad/entities/api_limit"
+    autoload :Currency, "idoklad/entities/currency"
     autoload :IssuedInvoice, "idoklad/entities/issued_invoice"
   end
 

@@ -5,12 +5,12 @@ module Idoklad
 
       # @param [String] arg
       def entity_name=(arg)
-        @@entity_name = arg
+        @entity_name = arg
       end
 
       # @return [String]
       def entity_name
-        defined?(@@entity_name) && @@entity_name || self.name[/\w+$/] + "s"
+        @entity_name
       end
 
       # Empty entity with default values. Ideal for creation new entity
@@ -22,6 +22,12 @@ module Idoklad
       def find(id)
         json = parse_response Idoklad::ApiRequest.get "#{path}/#{id}"
         new(json) if json
+      end
+
+      # Alias for "all" entities
+      # @todo deal with pagination
+      def all
+        where
       end
 
       # @param [Hash] filter
@@ -52,8 +58,6 @@ module Idoklad
         filter = filters.collect { |k, v| [k, "eq", v].join("~") }.join("|")
         where(filter: filter).first
       end
-
-      protected
 
       # @param [Net::HTTPResponse] response
       def parse_response(response)

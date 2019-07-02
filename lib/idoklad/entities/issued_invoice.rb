@@ -6,7 +6,15 @@ module Idoklad
 
       # Just alias
       def total
-        total_with_vat
+        @table[:total_with_vat]
+      end
+
+      def number
+        @table[:document_number]
+      end
+
+      def currency
+        Currency.find(@table[:currency_id])
       end
 
     end
