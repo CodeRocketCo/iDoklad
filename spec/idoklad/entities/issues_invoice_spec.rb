@@ -78,4 +78,10 @@ RSpec.describe Idoklad::Entities::IssuedInvoice do
 
   end
 
+  describe "#status" do
+    subject { described_class.new({ id: 1, payment_status: 1 }) }
+    it { expect(subject.status).to eq :paid }
+    it { expect(subject.paid?).to eq true }
+  end
+
 end
