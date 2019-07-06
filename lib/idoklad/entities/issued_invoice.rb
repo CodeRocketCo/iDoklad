@@ -14,7 +14,7 @@ module Idoklad
       end
 
       def currency
-        Currency.find(@table[:currency_id])
+        @currency ||= Currency.find(@table[:currency_id])
       end
 
       def self.statuses
