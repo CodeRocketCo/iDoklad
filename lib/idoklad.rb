@@ -26,6 +26,7 @@ module Idoklad
   autoload :ApiRequest, "idoklad/api_request"
   autoload :Auth, "idoklad/auth"
   autoload :Base, "idoklad/base"
+  autoload :ParamsParser, "idoklad/params_parser"
 end
 
 require 'idoklad/issued_invoices'

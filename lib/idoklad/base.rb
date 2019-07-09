@@ -30,32 +30,25 @@ module Idoklad
         where
       end
 
-      # @param [Hash] filter
-      # @option filter [String] :filter
-      # @option filter [String] :sort (id~asc)
-      # @option filter [Integer] :pagesize
-      # @option filter [Integer] :page
-      # @option filter [Integer] :filtertype (and) it can be `and` or `or`
+      # @param [Hash] params
+      # @option params (see Idoklad::ParamsParser#initialize)
       # @see https://app.idoklad.cz/developer/Help
-      def where(**filter)
-        unknown_keys = filter.keys - %i[filter sort pagesize page filtertype]
+      def where(**params)
+        unknown_keys = params.keys - %i[filter sort pagesize page filtertype]
         raise(ArgumentError, "Unknown key(s): #{unknown_keys.join(', ')}") unless unknown_keys.empty?
 
         request_path = path
-        unless (params = filter.collect { |k, v| "#{k}=#{v}" }.join("&")).empty?
-          request_path << "?#{params}"
-        end
+        params = ParamsParser.new params
 
-        parse_response(Idoklad::ApiRequest.get(request_path))&.fetch("Data", []).collect(&method(:new))
+        parse_response(Idoklad::ApiRequest.get("#{request_path}?#{params}"))&.fetch("Data", []).collect(&method(:new))
       end
 
-      # @param [Hash] filters
+      # @param [Hash] filter
       # @example find entity by specify attribute(s)
       #   find_by(DocumentNumber: "1234") # => <IssuedInvoice DocumentNumber="123">
-      def find_by(**filters)
-        raise ArgumentError if filters.empty?
+      def find_by(**filter)
+        raise ArgumentError if filter.empty?
 
-        filter = filters.collect { |k, v| [k, "eq", v].join("~") }.join("|")
         where(filter: filter).first
       end
 
