@@ -40,7 +40,8 @@ module Idoklad
         request_path = path
         params = ParamsParser.new params
 
-        parse_response(Idoklad::ApiRequest.get("#{request_path}?#{params}"))&.fetch("Data", []).collect(&method(:new))
+        @response = Idoklad::ApiRequest.get("#{request_path}?#{params}")
+        parse_response(@response)&.fetch("Data", []).collect(&method(:new))
       end
 
       # @param [Hash] filter
@@ -55,8 +56,15 @@ module Idoklad
       # @param [Net::HTTPResponse] response
       def parse_response(response)
         JSON.parse response.body
-      rescue JSON::ParserError
-        nil
+      rescue JSON::ParserError => ex
+        puts ex.message
+        puts <<EOF
+Response: 
+    status: #{@response.code};
+    body: #{@response.body};
+    headers: #{@response.header}
+EOF
+        {}
       end
 
       def path
