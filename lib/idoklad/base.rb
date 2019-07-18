@@ -21,7 +21,7 @@ module Idoklad
       # @param [String] id
       def find(id)
         json = parse_response Idoklad::ApiRequest.get "#{path}/#{id}"
-        new(json) if json
+        new(json) if json && !json.empty?
       end
 
       # Alias for "all" entities
@@ -58,12 +58,12 @@ module Idoklad
         JSON.parse response.body
       rescue JSON::ParserError => ex
         puts ex.message
-        puts <<EOF
-Response: 
-    status: #{@response.code};
-    body: #{@response.body};
-    headers: #{@response.header}
-EOF
+        puts <<~EOF
+          Response:
+              status: #{response.code};
+              body: #{response.body};
+              headers: #{response.header}
+        EOF
         {}
       end
 
