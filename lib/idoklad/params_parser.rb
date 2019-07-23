@@ -5,7 +5,7 @@ module Idoklad
     # @param [Hash] hash
     # @option hash [String] :filter
     # @option hash [String] :sort (id~asc)
-    # @option hash [Integer] :pagesize
+    # @option hash [Integer] :page_size
     # @option hash [Integer] :page
     # @option hash [Integer] :filtertype (and) it can be `and` or `or`
     def initialize(**hash)
@@ -19,7 +19,7 @@ module Idoklad
         pagesize: page_size,
         page: page,
         filtertype: filter_type
-      }.delete_if { |_, v| v.nil? || v.empty? }.collect { |k, v| "#{k}=#{v}" }
+      }.delete_if { |_, v| v.nil? || v.to_s.empty? }.collect { |k, v| "#{k}=#{v}" }
       to_param.join("&")
     end
 
@@ -54,7 +54,7 @@ module Idoklad
 
     # @return [String]
     def page_size
-
+      @source[:page_size]
     end
 
     # @return [String]

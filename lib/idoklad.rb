@@ -19,8 +19,17 @@ module Idoklad
 
   module Entities
     autoload :ApiLimit, "idoklad/entities/api_limit"
+    autoload :Contact, "idoklad/entities/contact"
     autoload :Currency, "idoklad/entities/currency"
     autoload :IssuedInvoice, "idoklad/entities/issued_invoice"
+  end
+
+  class IdokladError < StandardError
+
+  end
+
+  class EntityNotFound < IdokladError
+
   end
 
   autoload :ApiRequest, "idoklad/api_request"

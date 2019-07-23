@@ -4,6 +4,9 @@ AllCops:
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented_relative_to_receiver
 
+Lint/HandleExceptions:
+  AllowComments: true
+
 Metrics/AbcSize:
   Enabled: false
 Metrics/BlockLength:

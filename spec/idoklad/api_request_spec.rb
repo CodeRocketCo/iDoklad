@@ -27,4 +27,20 @@ RSpec.describe Idoklad::ApiRequest do
       described_class.post "/developer/api/v2/IssuedInvoices", body
     end
   end
+
+  describe ".delete" do
+    it "200" do
+      stub_request(:delete, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices/1").
+        to_return(status: 200, body: "")
+
+      described_class.delete "/developer/api/v2/IssuedInvoices/1"
+    end
+
+    it "404" do
+      stub_request(:delete, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices/1").
+        to_return(status: 404, body: "Resource with id 1 was not found.")
+
+      described_class.delete "/developer/api/v2/IssuedInvoices/1"
+    end
+  end
 end

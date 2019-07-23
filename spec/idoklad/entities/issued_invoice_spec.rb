@@ -7,29 +7,37 @@ RSpec.describe Idoklad::Entities::IssuedInvoice do
   end
 
   it "initialize object" do
-    instance = described_class.new({ "id" => 1 })
+    instance = described_class.new("id" => 1)
     expect(instance.id).to eq 1
   end
 
   describe ".find" do
     it "200" do
-      stub_request(:get, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices/1").
-        to_return(status: 200, body: { id: 1, DocumentNumber: "20190601" }.to_json)
+      stub_request(:get, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices/1")
+        .to_return(status: 200, body: { id: 1, DocumentNumber: "20190601" }.to_json)
 
       expect(described_class.find(1)).to be_a described_class
     end
     it "404" do
-      stub_request(:get, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices/1").
-        to_return(status: 404, body: "")
+      stub_request(:get, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices/1")
+        .to_return(status: 404, body: "")
 
-      expect(described_class.find(1)).to be_nil
+      expect { described_class.find(1) }.to raise_exception Idoklad::EntityNotFound
+    end
+  end
+
+  describe ".first" do
+    it do
+      stub_request(:get, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices?pagesize=1")
+        .to_return(status: 200, body: { Data: [id: 1, DocumentNumber: "20190601"] }.to_json)
+      expect(described_class.first).to be_a described_class
     end
   end
 
   describe ".default" do
     it do
-      stub_request(:get, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices/Default").
-        to_return(status: 200, body: { DocumentNumber: "sample string 15" }.to_json)
+      stub_request(:get, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices/Default")
+        .to_return(status: 200, body: { DocumentNumber: "sample string 15" }.to_json)
 
       expect(described_class.default).to be_a described_class
     end
@@ -37,8 +45,8 @@ RSpec.describe Idoklad::Entities::IssuedInvoice do
 
   describe ".where" do
     it "filter" do
-      stub = stub_request(:get, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices?filter=DocumentNumber~eq~123").
-        to_return(status: 200, body: "{}")
+      stub = stub_request(:get, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices?filter=DocumentNumber~eq~123")
+               .to_return(status: 200, body: "{}")
       described_class.where(filter: "DocumentNumber~eq~123")
       expect(stub).to have_been_made
     end
@@ -46,8 +54,8 @@ RSpec.describe Idoklad::Entities::IssuedInvoice do
 
   describe ".find_by" do
     it "get invoice by number" do
-      stub = stub_request(:get, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices?filter=DocumentNumber~eq~123").
-        to_return(status: 200, body: { Data: [{ Id: 1, DocumentNumber: 123 }], TotalItems: 1 }.to_json, headers: {})
+      stub = stub_request(:get, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices?filter=DocumentNumber~eq~123")
+               .to_return(status: 200, body: { Data: [{ Id: 1, DocumentNumber: 123 }], TotalItems: 1 }.to_json, headers: {})
 
       expect(described_class.find_by(DocumentNumber: "123")).to be_a described_class
 
@@ -56,32 +64,66 @@ RSpec.describe Idoklad::Entities::IssuedInvoice do
   end
 
   describe "#total" do
-    subject { described_class.new({ id: 1, total_with_vat: 300 }) }
+    subject { described_class.new(id: 1, total_with_vat: 300) }
     it { expect(subject.total).to eq 300 }
   end
 
   describe "#number" do
-    subject { described_class.new({ id: 1, document_number: "20190601" }) }
+    subject { described_class.new(id: 1, document_number: "20190601") }
     it { expect(subject.number).to eq "20190601" }
   end
 
   describe "#currency" do
-    subject { described_class.new({ id: 1, currency_id: "1" }) }
+    subject { described_class.new(id: 1, currency_id: "1") }
 
     it "should return currency object" do
-      stub = stub_request(:get, "https://app.idoklad.cz/developer/api/v2/Currencies/1").
-        to_return(status: 200, body: { Code: "CZK", Name: "Czech Koruna" }.to_json)
+      stub = stub_request(:get, "https://app.idoklad.cz/developer/api/v2/Currencies/1")
+               .to_return(status: 200, body: { Code: "CZK", Name: "Czech Koruna", symbol: "Kč" }.to_json)
       expect(subject.currency).to be_a Idoklad::Entities::Currency
       expect(stub).to have_been_made
-
+      expect(subject.currency.to_s).to eq "Kč"
     end
 
   end
 
   describe "#status" do
-    subject { described_class.new({ id: 1, payment_status: 1 }) }
+    subject { described_class.new(id: 1, payment_status: 1) }
     it { expect(subject.status).to eq :paid }
     it { expect(subject.paid?).to eq true }
   end
 
+  describe "#destroy" do
+    it "destroy existing" do
+      stub_request(:delete, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices/1")
+        .to_return(status: 200)
+      instance = described_class.new("id" => 1)
+      expect(instance.destroy).to eq true
+    end
+
+    it "404" do
+      stub_request(:delete, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices/1")
+        .to_return(status: 404, body: "Not found")
+      instance = described_class.new("id" => 1)
+      expect { instance.destroy }.to raise_exception Idoklad::IdokladError
+    end
+  end
+
+  describe ".save" do
+    it "create new one" do
+      stub_request(:post, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices")
+        .to_return(status: 200, body: { id: 1, number: "x1" }.to_json)
+      instance = described_class.new(number: "x1")
+      expect(instance.save).to eq true
+      expect(instance.id).to eq 1
+    end
+
+    it "validation error on create" do
+      stub_request(:post, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices")
+        .with(body: { PurchaserId: "12" })
+        .to_return(status: 400, body: ["Required property 'Number' not found in JSON"].to_json)
+      instance = described_class.new(purchaser_id: "12")
+      expect(instance.save).to eq false
+      expect(instance.errors).to include kind_of(String)
+    end
+  end
 end
