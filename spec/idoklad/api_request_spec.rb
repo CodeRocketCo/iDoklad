@@ -1,46 +1,49 @@
 RSpec.describe Idoklad::ApiRequest do
-  before :each do
-    allow(Idoklad::Auth).to receive(:get_token).and_return "secret-token"
-  end
+  include_context "stub auth"
+
   describe ".get" do
     it "200" do
-      stub_request(:get, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices/1").
-        to_return(status: 200, body: "")
+      stub_request(:get, "#{Idoklad::API_URL}/IssuedInvoices/1").
+        to_return(status: 200, body: success_response)
 
-      described_class.get "/developer/api/v2/IssuedInvoices/1"
+      described_class.get "/IssuedInvoices/1"
     end
     it "404" do
-      stub_request(:get, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices/1").
-        to_return(status: 404, body: "")
+      stub_request(:get, "#{Idoklad::API_URL}/IssuedInvoices/1").
+        to_return(status: 404, body: error_response(404, "IssuedInvoice with id 1 was not found."))
 
-      described_class.get "/developer/api/v2/IssuedInvoices/1"
+      expect { described_class.get "/IssuedInvoices/1" }.to raise_error do |error|
+        expect(error).to be_a(Idoklad::ApiError)
+        expect(error.message).to eq "IssuedInvoice with id 1 was not found."
+        expect(error.code).to eq 404
+      end
     end
   end
 
   describe ".post" do
     it "201" do
       body = { NumericSequenceId: 1 }
-      stub_request(:post, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices").
+      stub_request(:post, "#{Idoklad::API_URL}/IssuedInvoices").
         with(body: body.to_json).
-        to_return(status: 200, body: "")
+        to_return(status: 200, body: success_response)
 
-      described_class.post "/developer/api/v2/IssuedInvoices", body
+      described_class.post "/IssuedInvoices", body
     end
   end
 
   describe ".delete" do
     it "200" do
-      stub_request(:delete, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices/1").
-        to_return(status: 200, body: "")
+      stub_request(:delete, "#{Idoklad::API_URL}/IssuedInvoices/1").
+        to_return(status: 200, body: success_response)
 
-      described_class.delete "/developer/api/v2/IssuedInvoices/1"
+      described_class.delete "/IssuedInvoices/1"
     end
 
     it "404" do
-      stub_request(:delete, "https://app.idoklad.cz/developer/api/v2/IssuedInvoices/1").
-        to_return(status: 404, body: "Resource with id 1 was not found.")
+      stub_request(:delete, "#{Idoklad::API_URL}/IssuedInvoices/1").
+        to_return(status: 404, body: error_response(404))
 
-      described_class.delete "/developer/api/v2/IssuedInvoices/1"
+      expect { described_class.delete "/IssuedInvoices/1" }.to raise_error Idoklad::ApiError
     end
   end
 end

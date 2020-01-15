@@ -1,33 +1,31 @@
+require 'active_support'
+require 'active_support/core_ext/string'
+
 module Idoklad
   class Base < OpenStruct
 
+    # Virtual table of attributes with fallback to CamelCase strings
+    # @note data are stored in Strings (CamelCase) primary
     class Table < Hash
       def key?(name)
-        super || super(camelcase(name.to_s))
+        super || super(name.to_s.camelcase)
       end
 
+      # @param [String, Symbol] name
       def [](name)
-        super || super(camelcase(name.to_s))
+        super || super(name.to_s.camelcase)
       end
 
+      # @param [String, Symbol] name
+      # @param [Object] value
       def []=(name, value)
-        super(camelcase(name.to_s), value)
+        if name.is_a?(Symbol)
+          super(name.to_s.camelcase, value)
+        else
+          super(name.camelcase, value)
+        end
       end
 
-      private
-
-      # Convert attribute name to underscore
-      def underscore(string)
-        word = string.to_s.dup
-        word.gsub!(/([A-Z\d]+)([A-Z][a-z])/, '\1_\2'.freeze)
-        word.gsub!(/([a-z\d])([A-Z])/, '\1_\2'.freeze)
-        word.downcase!
-        word
-      end
-
-      def camelcase(string)
-        string.sub(/^[a-z\d]*/) { |match| match.capitalize }.gsub(/(?:_|(\/))([a-z\d]*)/) { "#{$1}#{$2.capitalize}" }.gsub("/", "::").to_sym
-      end
     end
 
     class << self
@@ -49,10 +47,10 @@ module Idoklad
 
       # @param [String] id
       def find(id)
-        json = parse_response Idoklad::ApiRequest.get "#{path}/#{id}"
-        raise ::Idoklad::EntityNotFound if json.nil? || json.empty?
+        json = Idoklad::ApiRequest.get "#{path}/#{id}"
+        raise StandardError unless json
 
-        new(json)
+        new(json["Data"])
       end
 
       def first
@@ -75,8 +73,9 @@ module Idoklad
         request_path = path
         params = ParamsParser.new params
 
-        response = Idoklad::ApiRequest.get("#{request_path}?#{params}")
-        parse_response(response)&.fetch("Data", []).collect(&method(:new))
+
+        response = Idoklad::ApiRequest.get("#{request_path}?#{params}")["Data"] || {}
+        (response["Items"] || []).collect(&method(:new))
       end
 
       # @param [Hash] filter
@@ -88,35 +87,25 @@ module Idoklad
         where(filter: filter).first
       end
 
-      # @param [Net::HTTPResponse] response
-      def parse_response(response)
-        JSON.parse response.body
-      rescue JSON::ParserError => ex
-        puts ex.message
-        puts <<~EOF
-          Response:
-              status: #{response.code};
-              body: #{response.body};
-              headers: #{response.header}
-        EOF
-        {}
-      end
-
       def path
-        "/developer/api/v2/#{entity_name}"
+        "/#{entity_name}"
       end
 
     end
 
     attr_reader :errors
 
-    # @param [Hash] hash
-    def initialize(hash)
+    # @param [Hash] json
+    def initialize(json)
       @table = Table.new
-      hash.each_pair do |k, v|
-        @table[k.to_sym] = v
+      json.each_pair do |k, v|
+        @table[k] = v
       end
       @errors = []
+    end
+
+    def id
+      @table["Id"]
     end
 
     def path
@@ -125,15 +114,14 @@ module Idoklad
 
     def save
       if id.nil? || id.zero?
-        @response = Idoklad::ApiRequest.post(path, @table)
-        body = parse_response(@response)
-        if @response.is_a? Net::HTTPOK
-          body.each_pair do |k, v|
-            @table[k.to_sym] = v
+        begin
+          @response = Idoklad::ApiRequest.post(path, @table)["Data"]
+          @response.each_pair do |k, v|
+            @table[k] = v
           end
           true
-        else
-          @errors = body
+        rescue ApiError => e
+          @errors = Array(e.message)
           false
         end
       else
@@ -141,18 +129,30 @@ module Idoklad
       end
     end
 
+    def attributes
+      @table
+    end
+
+    # Reassign json (hash) to Table
+    def attributes=(json = {})
+      json.each_pair do |k, v|
+        @table[k] = v
+      end
+    end
+
     def destroy
       response = Idoklad::ApiRequest.delete("#{path}/#{id}")
-      raise ::Idoklad::EntityNotFound, response.body if response.is_a? Net::HTTPNotFound
-
-      response.is_a? Net::HTTPOK
+      response["IsSuccess"]
     end
 
-    private
-
-    def parse_response(response)
-      self.class.parse_response(response)
-    end
+    #def method_missing(m, *args, &block)
+    #  attribute = m.is_a?(Symbol) && m.to_s || m
+    #  if @table.key?(attribute.camelcase)
+    #    @table[attribute]
+    #  else
+    #    raise ArgumentError.new("Method `#{m}` doesn't exist.")
+    #  end
+    #end
 
   end
 end

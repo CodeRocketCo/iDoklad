@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- use API v3 (https://api.idoklad.cz/Help/v3/cs/#apiDiff)
 ## [1.1.0] - 2019-07-23
 ### Changed
 - base model attributes switched underscore to camelcase

@@ -1,28 +1,55 @@
+require 'rest-client'
+
 module Idoklad
   module ApiRequest
 
     class << self
 
       def delete(path)
-        uri = URI.parse("#{Idoklad::API_URL}#{path}")
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = true
-        http.delete(uri.request_uri, 'Authorization' => "Bearer #{Idoklad::Auth.get_token}")
+        response = RestClient.delete("#{Idoklad::API_URL}#{path}", authorization)
+        parse_response(response)
+      rescue RestClient::ExceptionWithResponse => e
+        raise ApiError, e.response
       end
 
       def get(path)
-        uri = URI.parse("#{Idoklad::API_URL}#{path}")
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = true
-        http.get(uri.request_uri, 'Authorization' => "Bearer #{Idoklad::Auth.get_token}")
+        response = RestClient.get("#{Idoklad::API_URL}#{path}", authorization)
+        parse_response(response)
+      rescue RestClient::ExceptionWithResponse => e
+        raise ApiError, e.response
       end
 
       def post(path, object)
-        uri = URI.parse("#{Idoklad::API_URL}#{path}")
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = true
-        http.post(uri.request_uri, JSON.generate(object), 'Authorization' => "Bearer #{Idoklad::Auth.get_token}", 'Content-Type' => 'application/json')
+        headers = { content_type: :json }.merge(authorization)
+        response = RestClient.post("#{Idoklad::API_URL}#{path}", JSON.generate(object), headers)
+        parse_response(response)
+      rescue RestClient::ExceptionWithResponse => e
+        raise ApiError, e.response
       end
+
+      # Parse response object to JSON
+      # @note in case of parse error return Hash compatible with iDoklad error response
+      # @param [RestClient::Response] response
+      # @return [Hash]
+      def parse_response(response)
+        JSON.parse response.body
+      rescue JSON::ParserError => ex
+        puts ex.message
+        puts <<~EOF
+          Response:
+              status: #{response.code};
+              body: #{response.body};
+              headers: #{response.headers}
+        EOF
+        { Data: response.body, Message: ex.message, StatusCode: response.code, Headers: response.headers }
+      end
+
+      private
+
+      def authorization
+        { Authorization: "Bearer #{Idoklad::Auth.get_token}" }
+      end
+
     end
 
   end

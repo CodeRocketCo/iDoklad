@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'idoklad'
-  s.version     = '1.0.3'
+  s.version     = '1.3.0'
   s.date        = '2010-07-01'
   s.summary     = "iDoklad"
   s.description = "A ruby gem for iDoklad.cz api."
@@ -9,9 +9,12 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/CodeRocketCo/iDoklad'
   s.license     = 'MIT'
   s.files       = %w[LICENSE.md README.md idoklad.gemspec] + Dir['lib/**/*.rb']
-  s.add_runtime_dependency "json", '~> 2.1'
+  s.add_runtime_dependency "activesupport", '> 5.0'
+  s.add_runtime_dependency "json", '~> 2.3'
   s.add_runtime_dependency "oauth2", '~> 1.4'
 
+  s.add_development_dependency "pry"
+  s.add_development_dependency "rest-client", "~> 2.1.0"
   s.add_development_dependency "rspec", "~> 3.8"
   s.add_development_dependency "webmock", "~> 3.6"
 end

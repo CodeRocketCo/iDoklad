@@ -7,7 +7,7 @@ RSpec.describe Idoklad::Entities::Contact do
   end
 
   it "get contact" do
-    stub_request(:get, "https://app.idoklad.cz/developer/api/v2/Contacts?pagesize=1")
+    stub_request(:get, "#{Idoklad::API_URL}/Contacts?pagesize=1")
       .to_return(status: 200, body: File.read(File.join(__dir__, "../../fixtures/files/Contacts.json")), headers: {})
     subject = described_class.first
     expect(subject.dic).to eq "sample string 18"

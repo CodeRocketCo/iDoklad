@@ -2,7 +2,7 @@ require 'json'
 
 module Idoklad
 
-  API_URL = 'https://app.idoklad.cz'
+  API_URL = 'https://api.idoklad.cz/v3'
 
   class << self
     attr_accessor :configuration
@@ -18,7 +18,6 @@ module Idoklad
   end
 
   module Entities
-    autoload :ApiLimit, "idoklad/entities/api_limit"
     autoload :Contact, "idoklad/entities/contact"
     autoload :Currency, "idoklad/entities/currency"
     autoload :IssuedInvoice, "idoklad/entities/issued_invoice"
@@ -28,10 +27,7 @@ module Idoklad
 
   end
 
-  class EntityNotFound < IdokladError
-
-  end
-
+  autoload :ApiError, "idoklad/api_error"
   autoload :ApiRequest, "idoklad/api_request"
   autoload :Auth, "idoklad/auth"
   autoload :Base, "idoklad/base"

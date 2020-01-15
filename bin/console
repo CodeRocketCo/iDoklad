@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "idoklad"
+
+Idoklad.configure do |config|
+  config.client_id = ENV["idoklad_client_id"]
+  config.client_secret = ENV["idoklad_client_secret"]
+end
+require "pry"
+Pry.start
