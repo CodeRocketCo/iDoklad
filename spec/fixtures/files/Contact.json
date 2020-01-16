@@ -1,0 +1,40 @@
+{
+  "Data": {
+    "AccountNumber": "sample string 1",
+    "BankId": 1,
+    "City": "sample string 2",
+    "CompanyName": "sample string 3",
+    "CountryId": 4,
+    "DiscountPercentage": 5,
+    "Email": "sample string 6",
+    "Fax": "sample string 7",
+    "Firstname": "sample string 8",
+    "Iban": "sample string 9",
+    "Id": 10,
+    "IdentificationNumber": "sample string 11",
+    "IsRegisteredForVatOnPay": true,
+    "Metadata": {
+      "DateCreated": "2019-12-10T13:12:32.42",
+      "DateLastChange": "2019-12-10T13:12:32.42",
+      "UserCreatedId": 1,
+      "UserLastChangeId": 1
+    },
+    "Mobile": "sample string 13",
+    "Phone": "sample string 14",
+    "PostalCode": "sample string 15",
+    "SendReminders": true,
+    "Street": "sample string 17",
+    "Surname": "sample string 18",
+    "Swift": "sample string 19",
+    "Title": "sample string 20",
+    "VatIdentificationNumber": "sample string 21",
+    "VatIdentificationNumberSk": "sample string 22",
+    "Www": "sample string 23",
+    "Note": "sample string 24",
+    "DefaultInvoiceMaturity": 1
+  },
+  "ErrorCode": 0,
+  "IsSuccess": true,
+  "Message": "sample string 2",
+  "StatusCode": 100
+}

@@ -9,3 +9,7 @@ RSpec.shared_context "stub auth" do
   end
 
 end
+
+def file_fixture(file_name)
+  File.read(File.join(__dir__, "../fixtures/files/#{file_name}"))
+end

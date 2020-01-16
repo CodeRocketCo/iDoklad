@@ -39,22 +39,33 @@ Of course replace **\*\*INSERT_YOUR_CLIENT_ID\*\*** and **\*\*INSERT_YOUR_CLIENT
 
 It returns the list of all issued invoices:
 
-    @result = Idoklad::IssuedInvoices.get_list
+    @result = Idoklad::Entities::IssuedInvoice.all
+    
+#### Filtering
+Find specify invoice by number
+
+    @result = Idoklad::Entities::IssuedInvoice.find_by DocumentNumber: "TE20200001"
+    
+Find all invoice of specify contact 
+
+    @result = Idoklad::Entities::IssuedInvoice.where filter: {PurchaserId: "8147313"}
 
 ### Getting Default Invoice
 
 Returns an empty invoice with initial values according to the agenda settings. Good for issuing new invoice.
 
-    @result = Idoklad::IssuedInvoices.get_default
+    @result = Idoklad::Entities::IssuedInvoice.default
 
 ### Creating Invoice
 
 Creates a new invoice and returns whole response:
 
-    invoice = Idoklad::IssuedInvoices.get_default
-    # update invoice here...
-    # invoice["Name"] = ..
-    response = Idoklad::IssuedInvoices.create invoice
+    invoice = Idoklad::Entities::IssuedInvoice.default
+    invoice.name = "..."
+    invoice.save # => true
+    invoice.partner_id = nil
+    invoice.save # => false
+    invoice.errors # => ["Error converting value {null} to type 'System.Int32'"]
 
 ## Contribution
 

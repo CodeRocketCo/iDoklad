@@ -18,9 +18,11 @@ module Idoklad
   end
 
   module Entities
+    autoload :Country, "idoklad/entities/country"
     autoload :Contact, "idoklad/entities/contact"
     autoload :Currency, "idoklad/entities/currency"
     autoload :IssuedInvoice, "idoklad/entities/issued_invoice"
+    autoload :NumericSequences, "idoklad/entities/numeric_sequence"
   end
 
   class IdokladError < StandardError

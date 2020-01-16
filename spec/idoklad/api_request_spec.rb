@@ -21,13 +21,24 @@ RSpec.describe Idoklad::ApiRequest do
   end
 
   describe ".post" do
-    it "201" do
+    it "200" do
       body = { NumericSequenceId: 1 }
       stub_request(:post, "#{Idoklad::API_URL}/IssuedInvoices").
         with(body: body.to_json).
         to_return(status: 200, body: success_response)
 
       described_class.post "/IssuedInvoices", body
+    end
+  end
+
+  describe ".patch" do
+    it "200" do
+      body = { NumericSequenceId: 1 }
+      stub_request(:patch, "#{Idoklad::API_URL}/IssuedInvoices").
+        with(body: body.to_json).
+        to_return(status: 200, body: success_response)
+
+      described_class.patch "/IssuedInvoices", body
     end
   end
 

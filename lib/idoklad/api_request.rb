@@ -27,6 +27,15 @@ module Idoklad
         raise ApiError, e.response
       end
 
+      def patch(path, object)
+        headers = { content_type: :json }.merge(authorization)
+        response = RestClient.patch("#{Idoklad::API_URL}#{path}", JSON.generate(object), headers)
+        parse_response(response)
+      rescue RestClient::ExceptionWithResponse => e
+        raise ApiError, e.response
+      end
+      alias put patch
+
       # Parse response object to JSON
       # @note in case of parse error return Hash compatible with iDoklad error response
       # @param [RestClient::Response] response

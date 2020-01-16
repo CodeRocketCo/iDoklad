@@ -4,13 +4,13 @@ module Idoklad
     # @return [RestClient::Response]
     attr_reader :response
     # @return [Hash]
-    attr_reader :body
+    attr_reader :response_body
 
     # @param [RestClient::Response] response
     def initialize(response)
       @response = response
-      @body = Idoklad::ApiRequest.parse_response(response)
-      super @body["Message"]
+      @response_body = Idoklad::ApiRequest.parse_response(response)
+      super @response_body["Message"]
     end
 
     def code

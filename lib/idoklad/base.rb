@@ -25,7 +25,6 @@ module Idoklad
           super(name.camelcase, value)
         end
       end
-
     end
 
     class << self
@@ -104,30 +103,7 @@ module Idoklad
       @errors = []
     end
 
-    def id
-      @table["Id"]
-    end
-
-    def path
-      self.class.path
-    end
-
-    def save
-      if id.nil? || id.zero?
-        begin
-          @response = Idoklad::ApiRequest.post(path, @table)["Data"]
-          @response.each_pair do |k, v|
-            @table[k] = v
-          end
-          true
-        rescue ApiError => e
-          @errors = Array(e.message)
-          false
-        end
-      else
-        raise NotImplementedError
-      end
-    end
+    # @!group Attributes
 
     def attributes
       @table
@@ -140,9 +116,63 @@ module Idoklad
       end
     end
 
+    # @return [Integer]
+    def id
+      @table["Id"]
+    end
+
+    # @return [Time]
+    def updated_at
+      Time.parse(metadata["DateLastChange"])
+    rescue ArgumentError
+      # nil
+    end
+
+    # @return [Time]
+    def created_at
+      Time.parse(metadata["DateCreated"])
+    rescue ArgumentError
+      # nil
+    end
+
+    # @!group Actions
+
+    # @return [Boolean]
+    def save
+      begin
+        if id.nil? || id.zero?
+          self.attributes = Idoklad::ApiRequest.post(path, @table)["Data"]
+          true
+        else
+          self.attributes = Idoklad::ApiRequest.patch(path, attributes)
+          true
+        end
+      rescue ApiError => e
+        @errors = Array(e.message)
+        false
+      end
+    end
+
+    def update(attributes = {})
+      self.attributes = Idoklad::ApiRequest.patch("#{path}/#{id}", attributes)
+      self
+    end
+
     def destroy
       response = Idoklad::ApiRequest.delete("#{path}/#{id}")
       response["IsSuccess"]
+    end
+
+    # @!endgroup
+
+    def path
+      self.class.path
+    end
+
+    private
+
+    def metadata
+      @table["Metadata"]
     end
 
     #def method_missing(m, *args, &block)

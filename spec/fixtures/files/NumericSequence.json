@@ -1,0 +1,21 @@
+{
+  "Data": {
+    "DocumentType": 0,
+    "Id": 1,
+    "IsDefault": true,
+    "LastNumber": 3,
+    "Metadata": {
+      "DateCreated": "2019-12-10T13:12:34.316",
+      "DateLastChange": "2019-12-10T13:12:34.316",
+      "UserCreatedId": 1,
+      "UserLastChangeId": 1
+    },
+    "Name": "sample string 4",
+    "NumberFormat": "sample string 5",
+    "Year": 6
+  },
+  "ErrorCode": 0,
+  "IsSuccess": true,
+  "Message": "sample string 2",
+  "StatusCode": 100
+}

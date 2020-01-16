@@ -43,6 +43,14 @@ RSpec.describe Idoklad::Entities::IssuedInvoice do
     end
   end
 
+  describe ".all" do
+    it "to_h" do
+      stub_request(:get, "#{Idoklad::API_URL}/IssuedInvoices")
+        .to_return(status: 200, body: file_fixture("IssuedInvoices.json"))
+      described_class.all
+    end
+  end
+
   describe ".where" do
     it "filter" do
       stub = stub_request(:get, "#{Idoklad::API_URL}/IssuedInvoices?filter=DocumentNumber~eq~123")
@@ -64,8 +72,14 @@ RSpec.describe Idoklad::Entities::IssuedInvoice do
   end
 
   describe "#total" do
-    subject { described_class.new(id: 1, total_with_vat: 300) }
-    it { expect(subject.total).to eq 300 }
+    context "without prices" do
+      subject { described_class.new(id: 1, total_with_vat: 300) }
+      it { expect(subject.total).to be_nil }
+    end
+    context "without prices" do
+      subject { described_class.new(JSON.parse(file_fixture("IssuedInvoice.json"))["Data"]) }
+      it { expect(subject.total).to eq 9 }
+    end
   end
 
   describe "#number" do
@@ -86,6 +100,63 @@ RSpec.describe Idoklad::Entities::IssuedInvoice do
 
   end
 
+  describe "#currency=" do
+    subject { described_class.new id: 1 }
+    it "assign Currency object" do
+      subject.currency = Idoklad::Entities::Currency.new id: 1, code: "eur"
+      expect(subject.currency).to be_a Idoklad::Entities::Currency
+      expect(subject.currency.code).to eq "eur"
+    end
+
+    context "assign currency symbol" do
+
+      it "valid symbol" do
+        stub = stub_request(:get, "#{Idoklad::API_URL}/Currencies?filter=code~eq~eur")
+                 .to_return(status: 200, body: success_response(JSON.parse(file_fixture("Currencies.json"))["Data"]))
+
+        subject.currency = "eur"
+        expect(stub).to have_been_made
+        expect(subject.currency).to be_a Idoklad::Entities::Currency
+        expect(subject.currency).to eq subject.currency
+      end
+
+      it "nil" do
+        subject.currency = nil
+        expect(subject.currency).to be_nil
+      end
+
+    end
+  end
+
+  context "partner" do
+    subject(:entity) { described_class.new id: 1 }
+    let(:contact) { Idoklad::Entities::Contact.new Id: 1, CompanyName: "Cipisek" }
+    describe "#partner" do
+      subject { entity.partner }
+      it "assign nil" do
+        entity.partner = nil
+        is_expected.to be_nil
+      end
+      it "reassign" do
+        entity.partner = contact
+        is_expected.to be_a Idoklad::Entities::Contact
+      end
+      it 'should alias' do
+        entity.contact = contact
+        expect(entity.contact).to be_a Idoklad::Entities::Contact
+      end
+    end
+
+    describe "#partner_id" do
+      it 'should remove instance variable @partner' do
+        subject = described_class.new Id: 1
+        subject.contact = contact
+        expect(subject.partner_id = nil).to be_nil
+        expect(subject.instance_variables).not_to include :@partner
+        expect { subject.partner_id = nil }.not_to raise_error
+      end
+    end
+  end
   describe "#status" do
     subject { described_class.new(id: 1, payment_status: 1) }
     it { expect(subject.status).to eq :paid }
