@@ -11,6 +11,7 @@ module Idoklad
       def ico
         @table["IdentificationNumber"]
       end
+      alias ic ico
 
       def name
         @table["CompanyName"]
@@ -18,12 +19,6 @@ module Idoklad
 
       def name=(company_name)
         @table["CompanyName"] = company_name
-      end
-
-      def updated_at
-        Time.parse(@table["DateLastChange"])
-      rescue ArgumentError
-        # nil
       end
 
     end

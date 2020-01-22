@@ -1,203 +1,46 @@
 {
-  "Data": [
-    {
-      "AddressIdg": "eef23021-cf8d-4b2b-b478-ec3bc33dc25d",
-      "CreditCheck": 0,
-      "DateLastChange": "2019-07-21T14:06:34.1632221+00:00",
-      "DefaultBankAccount": {
-        "Bank": {
-          "Code": "sample string 1",
-          "Country": {
-            "Code": "sample string 1",
-            "Currency": {
-              "Code": "sample string 1",
-              "Country": "sample string 2",
-              "Name": "sample string 3",
-              "Priority": 4,
-              "Symbol": "sample string 5",
-              "Id": 6,
-              "Links": {
-                "sample string 1": "sample string 2",
-                "sample string 3": "sample string 4"
-              }
-            },
-            "CurrencyId": 2,
-            "DateLastChange": "2019-07-21T14:06:34.1632221+00:00",
-            "Name": "sample string 4",
-            "NameEnglish": "sample string 5",
-            "Id": 6,
-            "Links": {
-              "sample string 1": "sample string 2",
-              "sample string 3": "sample string 4"
-            }
-          },
-          "CountryId": 2,
-          "DateLastChange": "2019-07-21T14:06:34.1632221+00:00",
-          "Name": "sample string 4",
-          "NumberCode": "sample string 5",
-          "Swift": "sample string 6",
-          "IsOutOfDate": true,
-          "Id": 8,
-          "Links": {
-            "sample string 1": "sample string 2",
-            "sample string 3": "sample string 4"
-          }
-        },
-        "Currency": {
-          "Code": "sample string 1",
-          "Country": "sample string 2",
-          "Name": "sample string 3",
-          "Priority": 4,
-          "Symbol": "sample string 5",
-          "Id": 6,
-          "Links": {
-            "sample string 1": "sample string 2",
-            "sample string 3": "sample string 4"
-          }
-        },
-        "DateLastChange": "2019-07-21T14:06:34.1632221+00:00",
-        "IsDefault": true,
-        "CurrencyId": 3,
-        "AccountNumber": "sample string 4",
+  "Data": {
+    "Items": [
+      {
+        "AccountNumber": "sample string 1",
         "BankId": 1,
-        "Iban": "sample string 5",
-        "Name": "sample string 6",
-        "Swift": "sample string 7",
-        "Id": 8,
-        "Links": {
-          "sample string 1": "sample string 2",
-          "sample string 3": "sample string 4"
-        }
-      },
-      "Id": 3,
-      "CompanyName": "sample string 4",
-      "CountryId": 5,
-      "IsRegisteredForVatOnPay": true,
-      "DefaultInvoiceMaturity": 1,
-      "City": "sample string 7",
-      "DiscountPercentage": 1.0,
-      "Email": "sample string 8",
-      "Fax": "sample string 9",
-      "Firstname": "sample string 10",
-      "IdentificationNumber": "sample string 11",
-      "IsSendReminder": true,
-      "Mobile": "sample string 12",
-      "Phone": "sample string 13",
-      "PostalCode": "sample string 14",
-      "Street": "sample string 15",
-      "Surname": "sample string 16",
-      "Title": "sample string 17",
-      "VatIdentificationNumber": "sample string 18",
-      "VatIdentificationNumberSk": "sample string 19",
-      "Www": "sample string 20",
-      "Links": {
-        "sample string 1": "sample string 2",
-        "sample string 3": "sample string 4"
-      }
-    },
-    {
-      "AddressIdg": "eef23021-cf8d-4b2b-b478-ec3bc33dc25d",
-      "CreditCheck": 0,
-      "DateLastChange": "2019-07-21T14:06:34.1632221+00:00",
-      "DefaultBankAccount": {
-        "Bank": {
-          "Code": "sample string 1",
-          "Country": {
-            "Code": "sample string 1",
-            "Currency": {
-              "Code": "sample string 1",
-              "Country": "sample string 2",
-              "Name": "sample string 3",
-              "Priority": 4,
-              "Symbol": "sample string 5",
-              "Id": 6,
-              "Links": {
-                "sample string 1": "sample string 2",
-                "sample string 3": "sample string 4"
-              }
-            },
-            "CurrencyId": 2,
-            "DateLastChange": "2019-07-21T14:06:34.1632221+00:00",
-            "Name": "sample string 4",
-            "NameEnglish": "sample string 5",
-            "Id": 6,
-            "Links": {
-              "sample string 1": "sample string 2",
-              "sample string 3": "sample string 4"
-            }
-          },
-          "CountryId": 2,
-          "DateLastChange": "2019-07-21T14:06:34.1632221+00:00",
-          "Name": "sample string 4",
-          "NumberCode": "sample string 5",
-          "Swift": "sample string 6",
-          "IsOutOfDate": true,
-          "Id": 8,
-          "Links": {
-            "sample string 1": "sample string 2",
-            "sample string 3": "sample string 4"
-          }
+        "City": "sample string 2",
+        "CompanyName": "sample string 3",
+        "CountryId": 4,
+        "DiscountPercentage": 5,
+        "Email": "sample string 6",
+        "Fax": "sample string 7",
+        "Firstname": "sample string 8",
+        "Iban": "sample string 9",
+        "Id": 10,
+        "IdentificationNumber": "sample string 11",
+        "IsRegisteredForVatOnPay": true,
+        "Metadata": {
+          "DateCreated": "2019-12-10T13:12:32.408",
+          "DateLastChange": "2019-12-10T13:12:32.408",
+          "UserCreatedId": 1,
+          "UserLastChangeId": 1
         },
-        "Currency": {
-          "Code": "sample string 1",
-          "Country": "sample string 2",
-          "Name": "sample string 3",
-          "Priority": 4,
-          "Symbol": "sample string 5",
-          "Id": 6,
-          "Links": {
-            "sample string 1": "sample string 2",
-            "sample string 3": "sample string 4"
-          }
-        },
-        "DateLastChange": "2019-07-21T14:06:34.1632221+00:00",
-        "IsDefault": true,
-        "CurrencyId": 3,
-        "AccountNumber": "sample string 4",
-        "BankId": 1,
-        "Iban": "sample string 5",
-        "Name": "sample string 6",
-        "Swift": "sample string 7",
-        "Id": 8,
-        "Links": {
-          "sample string 1": "sample string 2",
-          "sample string 3": "sample string 4"
-        }
-      },
-      "Id": 3,
-      "CompanyName": "sample string 4",
-      "CountryId": 5,
-      "IsRegisteredForVatOnPay": true,
-      "DefaultInvoiceMaturity": 1,
-      "City": "sample string 7",
-      "DiscountPercentage": 1.0,
-      "Email": "sample string 8",
-      "Fax": "sample string 9",
-      "Firstname": "sample string 10",
-      "IdentificationNumber": "sample string 11",
-      "IsSendReminder": true,
-      "Mobile": "sample string 12",
-      "Phone": "sample string 13",
-      "PostalCode": "sample string 14",
-      "Street": "sample string 15",
-      "Surname": "sample string 16",
-      "Title": "sample string 17",
-      "VatIdentificationNumber": "sample string 18",
-      "VatIdentificationNumberSk": "sample string 19",
-      "Www": "sample string 20",
-      "Links": {
-        "sample string 1": "sample string 2",
-        "sample string 3": "sample string 4"
+        "Mobile": "sample string 13",
+        "Phone": "sample string 14",
+        "PostalCode": "sample string 15",
+        "SendReminders": true,
+        "Street": "sample string 17",
+        "Surname": "sample string 18",
+        "Swift": "sample string 19",
+        "Title": "sample string 20",
+        "VatIdentificationNumber": "sample string 21",
+        "VatIdentificationNumberSk": "sample string 22",
+        "Www": "sample string 23",
+        "Note": "sample string 24",
+        "DefaultInvoiceMaturity": 1
       }
-    }
-  ],
-  "Links": {
-    "First": "sample string 1",
-    "Last": "sample string 2",
-    "Next": "sample string 3",
-    "Prev": "sample string 4",
-    "Self": "sample string 5"
+    ],
+    "TotalItems": 1,
+    "TotalPages": 2
   },
-  "TotalItems": 1,
-  "TotalPages": 2
+  "ErrorCode": 0,
+  "IsSuccess": true,
+  "Message": "sample string 2",
+  "StatusCode": 100
 }

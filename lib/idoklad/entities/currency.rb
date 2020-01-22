@@ -5,7 +5,7 @@ module Idoklad
       self.entity_name = "Currencies"
 
       def to_s
-        @table[:symbol]
+        @table["Symbol"]
       end
     end
   end

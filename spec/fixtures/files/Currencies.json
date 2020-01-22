@@ -1,0 +1,20 @@
+{
+  "Data": {
+    "Items": [
+      {
+        "Code": "EUR",
+        "CountryName": "sample string 2",
+        "Id": 3,
+        "Name": "Euro",
+        "Priority": 5,
+        "Symbol": "€"
+      }
+    ],
+    "TotalItems": 1,
+    "TotalPages": 2
+  },
+  "ErrorCode": 0,
+  "IsSuccess": true,
+  "Message": "sample string 2",
+  "StatusCode": 100
+}
